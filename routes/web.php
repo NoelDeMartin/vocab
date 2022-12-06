@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\Facades\Vocabs;
+use App\Support\Facades\Ontologies;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'home');
-Vocabs::routes();
+Ontologies::routes();

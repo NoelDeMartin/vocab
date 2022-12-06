@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\VocabsManager;
+use App\Services\OntologiesManager;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('vocabs', VocabsManager::class);
+        $this->app->singleton('ontologies', OntologiesManager::class);
     }
 
     /**

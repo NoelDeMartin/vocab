@@ -2,15 +2,15 @@
 
 namespace App\Http\Middleware;
 
-use App\Support\Facades\Vocabs;
+use App\Support\Facades\Ontologies;
 use Closure;
 use Illuminate\Http\Request;
 
-class Vocab
+class Ontology
 {
     public function handle(Request $request, Closure $next, string $name)
     {
-        Vocabs::current($name);
+        Ontologies::current($name);
 
         return $next($request);
     }

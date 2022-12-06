@@ -2,10 +2,15 @@
 
 return [
     'home' => [
-        'title' => "Noel De Martin's Vocabs",
+        'title' => "Noel De Martin's Vocabulary",
     ],
 
-    'show' => [
-        'back' => 'View vocab',
+    'ontologies' => [
+        'index' => [
+            'classes' => 'These are the classes included in this ontology:',
+        ],
+        'show' => [
+            'full' => 'View full ontology',
+        ],
     ],
 ];

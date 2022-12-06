@@ -57,6 +57,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'vocab' => \App\Http\Middleware\Vocab::class,
+        'ontology' => \App\Http\Middleware\Ontology::class,
     ];
 }

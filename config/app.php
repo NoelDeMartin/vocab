@@ -1,6 +1,6 @@
 <?php
 
-use App\Support\Facades\Vocabs;
+use App\Support\Facades\Ontologies;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -207,7 +207,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        'Vocabs' => Vocabs::class,
+        'Ontologies' => Ontologies::class,
     ])->toArray(),
 
 ];

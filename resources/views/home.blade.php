@@ -5,8 +5,12 @@
     <h1>@lang('app.home.title')</h1>
 
     <ul>
-        @foreach (Vocabs::all() as $vocab)
-            <li><a href="{{ route("vocabs.{$vocab->name}.index") }}">{{ $vocab->name }}</a></li>
+        @foreach (Ontologies::all() as $ontology)
+            <li>
+                <a href="{{ route("ontologies.{$ontology->shortId()}.index") }}">
+                    {{ $ontology->name }}
+                </a>
+            </li>
         @endforeach
     </ul>
 @endsection
