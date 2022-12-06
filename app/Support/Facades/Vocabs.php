@@ -2,7 +2,7 @@
 
 namespace App\Support\Facades;
 
-use App\Http\Middleware\Vocab;
+use App\Models\Vocab;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 

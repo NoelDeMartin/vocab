@@ -5,13 +5,13 @@ test('index works', function () {
 
     $response->assertStatus(200);
     $response->assertSee('crdt');
-    $response->assertSee('Foo');
-    $response->assertSee('Bar');
+    $response->assertSee('Metadata');
+    $response->assertSee('Operation');
 });
 
 test('show works', function () {
-    $response = $this->get('/crdt/Foo');
+    $response = $this->get('/crdt/Metadata');
 
     $response->assertStatus(200);
-    $response->assertSee('Foo');
+    $response->assertSee('Metadata');
 });
