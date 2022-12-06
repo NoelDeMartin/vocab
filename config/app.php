@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\Facades\Vocabs;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -206,7 +207,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Vocabs' => Vocabs::class,
     ])->toArray(),
 
 ];

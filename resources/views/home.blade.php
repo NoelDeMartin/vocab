@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocab</title>
-</head>
-<body>
-    <h1>Vocab</h1>
-</body>
-</html>
+@extends('layouts.main')
+
+@section('title', trans('app.home.title'))
+@section('content')
+    <h1>@lang('app.home.title')</h1>
+
+    <ul>
+        @foreach (Vocabs::all() as $vocab)
+            <li><a href="{{ route("vocabs.{$vocab->name}.index") }}">{{ $vocab->name }}</a></li>
+        @endforeach
+    </ul>
+@endsection

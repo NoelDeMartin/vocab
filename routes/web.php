@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\Facades\Vocabs;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'home');
+Vocabs::routes();
