@@ -10,7 +10,10 @@ module.exports = {
             spacing: {
                 edge: spacing['8'],
             },
-                        typography: ({ theme }) => ({
+            minWidth: theme => ({
+                table: theme('screens.md'),
+            }),
+            typography: ({ theme }) => ({
                 DEFAULT: {
                     css: {
                         'code::before': {

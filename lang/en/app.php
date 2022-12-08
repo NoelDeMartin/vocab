@@ -13,4 +13,15 @@ return [
             'full' => 'View full ontology',
         ],
     ],
+
+    'terms' => [
+        'class' => [
+            'propertyId' => 'Property',
+            'propertyRange' => 'Expected type',
+            'propertyDescription' => 'Description',
+        ],
+        'property' => [
+            'classes' => 'This property can be found in the following classes:',
+        ],
+    ],
 ];

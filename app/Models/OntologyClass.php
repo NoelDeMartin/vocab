@@ -2,38 +2,39 @@
 
 namespace App\Models;
 
-class OntologyClass implements OntologyTerm
+class OntologyClass extends OntologyTerm
 {
     /**
-     * @var Ontology
+     * @var OntologyProperty[]
      */
-    public $ontology;
+    public $properties;
 
     /**
-     * @var string
+     * @param  Ontology  $ontology
+     * @param  string  $id
+     * @param  string  $name
+     * @param  string  $description
+     * @param  OntologyProperty[]  $properties
      */
-    public $id;
+    public function __construct(
+        Ontology $ontology,
+        string $id,
+        string $name = '',
+        string $description = '',
+        array $properties = []
+    ) {
+        parent::__construct($ontology, $id, 'class', $name, $description);
 
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var string
-     */
-    public $description;
-
-    public function __construct(Ontology $ontology, string $id, string $name, string $description)
-    {
-        $this->ontology = $ontology;
-        $this->id = $id;
-        $this->name = $name;
-        $this->description = $description;
+        $this->properties = $properties;
     }
 
-    public function shortId(): string
+    public function isExtraneous(): bool
     {
-        return substr($this->id, strlen($this->ontology->id));
+        return ! str_starts_with($this->id, $this->ontology->id);
+    }
+
+    public function addProperty(OntologyProperty $property): void
+    {
+        $this->properties[] = $property;
     }
 }
