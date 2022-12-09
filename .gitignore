@@ -1,0 +1,4 @@
+/nginx-agora
+/public
+/storage/*.key
+.env

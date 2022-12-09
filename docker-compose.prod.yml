@@ -1,0 +1,20 @@
+version: '3'
+services:
+    app:
+        image: noeldemartin/vocab
+        volumes:
+            - ./storage:/app/storage
+            - ./.env:/app/.env
+    nginx:
+        image: nginx
+        command: /etc/nginx/start.sh
+        environment:
+            - APP_URL=$APP_URL
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - ./docker/nginx/start.sh:/etc/nginx/start.sh
+            - ./docker/nginx/site.conf.template:/etc/nginx/templates/site.conf.template
+            - ./public:/var/www/html
+            - /etc/letsencrypt:/etc/letsencrypt

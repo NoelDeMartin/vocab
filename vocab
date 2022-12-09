@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+function vocab-docker-compose() {
+    if vocab_is_using_nginx_agora; then
+        # echo "Run docker compose with $@"
+        docker-compose -f $base_dir/docker-compose.nginx-agora.yml $@
+    else
+        docker-compose -f $base_dir/docker-compose.prod.yml $@
+    fi
+}
+
+function vocab-cli() {
+    $base_dir/vocab $@
+}
+
+function vocab_is_running() {
+    if [ -z $(vocab-docker-compose ps --quiet | head -n 1) ]; then
+        false
+    fi
+}
+
+function vocab_is_headless() {
+    if [ -d "$base_dir/app" ]; then
+        false
+    fi
+}
+
+function vocab_is_using_nginx_agora() {
+    if [ ! -d "$base_dir/nginx-agora" ]; then
+        false
+    fi
+}
+
+export base_dir=`cd $(readlink -f $0 | xargs dirname) && pwd`
+export scripts_dir="$base_dir/scripts"
+export -f vocab-docker-compose
+export -f vocab-cli
+export -f vocab_is_running
+export -f vocab_is_headless
+export -f vocab_is_using_nginx_agora
+
+command=$1
+
+case "$command" in
+    'help' | '' )
+        echo 'vocab install          | initialize app files'
+        echo 'vocab start            | start app services'
+        echo 'vocab restart          | restart app services'
+        echo 'vocab stop             | stop app services'
+        echo 'vocab update           | update app and restart'
+        echo 'vocab chown            | set permissions for storage'
+        echo 'vocab publish-assets   | publish assets into /public folder'
+        echo 'vocab shell {service?} | open shell in a running container'
+        echo 'vocab docker-compose   | run docker-compose command'
+        ;;
+    'stop' )
+        vocab-docker-compose down
+        ;;
+    'restart' )
+        vocab-cli stop
+        vocab-cli start
+        ;;
+    'docker-compose' )
+        vocab-docker-compose ${@:2}
+        ;;
+    'install' | 'start' | 'update' | 'chown' | 'publish-assets' | 'shell' )
+        $scripts_dir/$command.sh ${@:2}
+        ;;
+    * )
+        echo "Unknown command '$command'"
+        ;;
+esac
