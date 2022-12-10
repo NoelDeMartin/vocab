@@ -3,7 +3,7 @@ map $http_upgrade $connection_upgrade {
   ''      close;
 }
 
-proxy_cache_path /var/cache/nginx-proxy levels=1:2 keys_zone=CACHE-PROXY:10m inactive=7d max_size=1g;
+proxy_cache_path /var/cache/nginx-vocab levels=1:2 keys_zone=CACHE-VOCAB:10m inactive=7d max_size=1g;
 
 server {
   listen 80;
@@ -64,7 +64,7 @@ server {
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection $connection_upgrade;
 
-    proxy_cache CACHE-PROXY;
+    proxy_cache CACHE-VOCAB;
     proxy_cache_valid 200 7d;
     proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
 
