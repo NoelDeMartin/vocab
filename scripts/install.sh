@@ -89,7 +89,7 @@ if [[ $USE_NGINX_AGORA == y ]]; then
 
     mkdir "$base_dir/nginx-agora"
     cp "$base_dir/docker/nginx/site.conf.template" "$base_dir/nginx-agora/$APP_DOMAIN.conf"
-    sed "s/root \\/var\\/www\\/html/root \\/var\\/www\\/site/g" -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
+    sed "s/root \\/var\\/www\\/html/root \\/var\\/www\\/vocab/g" -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
     sed "s/fastcgi_pass app:9000/fastcgi_pass vocab:9000/g" -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
     sed s/\\[\\[APP_DOMAIN\\]\\]/$APP_DOMAIN/g -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
 
