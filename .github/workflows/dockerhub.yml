@@ -2,6 +2,12 @@ name: DockerHub
 on: [push]
 jobs:
 
+  # This publishes a development image, to tag an image to be used in production run the following
+  # commands in your machine:
+  # docker pull noeldemartin/vocab:{commit-id}
+  # docker tag noeldemartin/vocab:{commit-id} noeldemartin/vocab:latest
+  # docker push noeldemartin/vocab:latest
+
   publish-image:
     runs-on: ubuntu-latest
     steps:
