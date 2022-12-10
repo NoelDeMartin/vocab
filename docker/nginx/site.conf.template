@@ -3,7 +3,7 @@ map $http_upgrade $connection_upgrade {
   ''      close;
 }
 
-proxy_cache_path /var/cache/nginx-proxy levels=1:2 keys_zone=CACHE-PROXY:10m inactive=7d max_size=1g;
+proxy_cache_path /var/cache/nginx-vocab levels=1:2 keys_zone=CACHE-VOCAB:10m inactive=7d max_size=1g;
 
 server {
   listen 80;
