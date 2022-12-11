@@ -3,12 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Support\Facades\Ontologies;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class OntologiesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->header('Accept') === 'text/turtle') {
+            return response(Ontologies::current()->turtle(), 200, [
+                'Content-Type' => 'text/turtle',
+            ]);
+        }
+
         $ontology = Ontologies::current();
 
         return view('ontologies.index', compact('ontology'));

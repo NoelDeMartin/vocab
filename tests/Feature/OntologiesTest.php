@@ -44,3 +44,9 @@ test('show property', function () {
     $response->assertSee('Metadata');
     $response->assertSee('Operation');
 });
+
+test('get turtle', function () {
+    $response = $this->withHeaders(['Accept' => 'text/turtle'])->get('/crdt/');
+
+    $response->assertHeader('Content-Type', 'text/turtle; charset=UTF-8');
+});

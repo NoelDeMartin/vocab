@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 
 class Ontology
 {
@@ -85,6 +86,13 @@ class Ontology
         }
 
         return route("ontologies.{$this->shortId}.".$nameOrTerm, ...$args);
+    }
+
+    public function turtle(): string
+    {
+        $name = basename($this->id);
+
+        return File::get(resource_path("ontologies/$name.ttl"));
     }
 
     public function addClass(OntologyClass $class): void
