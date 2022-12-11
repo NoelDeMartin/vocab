@@ -20,7 +20,7 @@ COPY docker/supervisord.conf /etc/supervisord.conf
 COPY . /app
 
 # Install Composer dependencies
-RUN composer install --no-dev
+RUN composer install --optimize-autoloader --no-dev
 
 # Start Supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
