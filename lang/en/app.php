@@ -24,6 +24,8 @@ return [
             'propertyId' => 'Property',
             'propertyRange' => 'Expected type',
             'propertyDescription' => 'Description',
+            'inherited' => 'Properties inherited from [:name](:url)',
+            'children' => 'Classes that extend `:name`:',
         ],
         'property' => [
             'classes' => 'This property can be found in the following classes:',

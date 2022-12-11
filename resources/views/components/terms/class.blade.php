@@ -2,20 +2,30 @@
     $ontology = $term->ontology;
 @endphp
 
-@unless (empty($term->properties))
-    <div class="overflow-auto">
-        <table class="min-w-table">
-            <thead>
+<div class="overflow-auto">
+    <table class="min-w-table">
+        <thead>
+            <tr>
+                <th>@lang('app.terms.class.propertyId')</th>
+                <th>@lang('app.terms.class.propertyRange')</th>
+                <th>@lang('app.terms.class.propertyDescription')</th>
+            </tr>
+        </thead>
+        @foreach ($term->hierarchy() as $class)
+            @unless ($class === $term)
                 <tr>
-                    <th>@lang('app.terms.class.propertyId')</th>
-                    <th>@lang('app.terms.class.propertyRange')</th>
-                    <th>@lang('app.terms.class.propertyDescription')</th>
+                    <td colspan="3" class="italic">
+                        @markdown('app.terms.class.inherited', [
+                            'name' => $class->name,
+                            'url' => $term->ontology->route($class),
+                        ], true)
+                    </td>
                 </tr>
-            </thead>
-            @foreach ($term->properties as $property)
+            @endunless
+            @foreach ($class->properties as $property)
                 <tr>
                     <td>
-                        <a href="{{ $ontology->route('show', $property->shortId) }}">
+                        <a href="{{ $ontology->route($property) }}">
                             {{ $property->shortId }}
                         </a>
                     </td>
@@ -26,7 +36,7 @@
                                     {{ $class->shortId }}
                                 </a>
                             @else
-                                <a href="{{ $class->ontology->route('show', $class->shortId) }}">
+                                <a href="{{ $class->ontology->route($class) }}">
                                     {{ $class->shortId }}
                                 </a>
                             @endif
@@ -41,6 +51,20 @@
                     <td>{{ $property->description }}</td>
                 </tr>
             @endforeach
-        </table>
-    </div>
+        @endforeach
+    </table>
+</div>
+
+@unless (empty($term->childClasses))
+    @markdown('app.terms.class.children', ['name' => $term->shortId])
+
+    <ul>
+        @foreach ($term->childClasses as $childClass)
+            <li>
+                <a href="{{ $term->ontology->route($childClass) }}">
+                    {{ $childClass->name }}
+                </a>
+            </li>
+        @endforeach
+    </ul>
 @endunless

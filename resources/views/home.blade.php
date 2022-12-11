@@ -7,7 +7,7 @@
     <ul>
         @foreach (Ontologies::all() as $ontology)
             <li>
-                <a href="{{ $ontology->route('index') }}">
+                <a href="{{ $ontology->route() }}">
                     {{ $ontology->name }}
                 </a>
             </li>

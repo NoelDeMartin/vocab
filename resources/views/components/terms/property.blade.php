@@ -4,7 +4,7 @@
     <ul>
         @foreach ($term->domain as $class)
             <li>
-                <a href="{{ $term->ontology->route('show', $class->shortId) }}">
+                <a href="{{ $term->ontology->route($class) }}">
                     {{ $class->name }}
                 </a>
             </li>

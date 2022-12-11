@@ -10,6 +10,16 @@ class OntologyClass extends OntologyTerm
     public $properties;
 
     /**
+     * @var OntologyClass|null
+     */
+    public $parentClass = null;
+
+    /**
+     * @var OntologyClass[]
+     */
+    public $childClasses = [];
+
+    /**
      * @param  Ontology  $ontology
      * @param  string  $id
      * @param  string  $name
@@ -33,8 +43,32 @@ class OntologyClass extends OntologyTerm
         return ! str_starts_with($this->id, $this->ontology->id);
     }
 
+    /**
+     * @return OntologyClass[]
+     */
+    public function hierarchy(): array
+    {
+        $classes = [];
+
+        for ($class = $this; ! is_null($class); $class = $class->parentClass) {
+            $classes[] = $class;
+        }
+
+        return $classes;
+    }
+
     public function addProperty(OntologyProperty $property): void
     {
         $this->properties[] = $property;
+    }
+
+    public function setParentClass(OntologyClass $class): void
+    {
+        $this->parentClass = $class;
+    }
+
+    public function addChildClass(OntologyClass $class): void
+    {
+        $this->childClasses[] = $class;
     }
 }

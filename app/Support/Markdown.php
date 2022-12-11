@@ -6,9 +6,11 @@ use Parsedown;
 
 class Markdown extends Parsedown
 {
+    public static function render($text, $line = false)
+    {
+        $parser = new static;
 
-    public static function render($text) {
-        return (new static)->text($text);
+        return $line ? $parser->line($text) : $parser->text($text);
     }
 
     protected function inlineLink($excerpt)
@@ -17,11 +19,12 @@ class Markdown extends Parsedown
 
         $result['element']['attributes'] = $result['element']['attributes'] ?? [];
 
-        if (! str_starts_with($result['element']['attributes']['href'] ?? '', '#')) {
+        $url = $result['element']['attributes']['href'] ?? '';
+
+        if (! str_starts_with($url, '#') && ! str_starts_with($url, url(''))) {
             $result['element']['attributes']['target'] = '_blank';
         }
 
         return $result;
     }
-
 }

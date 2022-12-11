@@ -9,7 +9,7 @@
     <ul>
         @foreach ($ontology->classes as $class)
             <li>
-                <a href="{{ $ontology->route('show', $class->shortId) }}">
+                <a href="{{ $ontology->route($class) }}">
                     {{ $class->name }}
                 </a>
             </li>

@@ -7,7 +7,7 @@
     <code>{{ $term->id }}</code>
     <p>{{ $term->description }}</p>
     <x-dynamic-component :component="'terms.' . $term->type" :$term />
-    <a class="float-right" href="{{ $ontology->route('index') }}">
+    <a class="float-right" href="{{ $ontology->route() }}">
         @lang('app.ontologies.show.full') →
     </a>
 @endsection

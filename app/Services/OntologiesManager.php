@@ -55,9 +55,9 @@ class OntologiesManager
     {
         $graph = new Graph();
         $parser = new TurtleParser();
+        $extraneousClasses = [];
         $name = $file->getFilenameWithoutExtension();
         $baseUri = config('ontologies.base_uri').$name.'/';
-        $extraneousClasses = [];
 
         $parser->parse($graph, $file->getContents(), 'turtle', $baseUri);
 
@@ -66,19 +66,29 @@ class OntologiesManager
             $graph->getLiteral($baseUri, '<http://www.w3.org/2000/01/rdf-schema#label>')->getValue(),
             $graph->getLiteral($baseUri, '<http://purl.org/dc/terms/description>')->getValue(),
             $parser->getNamespaces()
-        ), function ($ontology) use ($graph) {
+        ), function ($ontology) use ($graph, $extraneousClasses) {
             $classResources = $graph->allOfType('<http://www.w3.org/2000/01/rdf-schema#Class>');
             $propertyResources = $graph->allOfType('<http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>');
 
             foreach ($classResources as $classResource) {
-                $ontology->addClass(
-                    new OntologyClass(
-                        $ontology,
-                        $classResource->getUri(),
-                        $classResource->getLiteral('<http://www.w3.org/2000/01/rdf-schema#label>')->getValue(),
-                        $classResource->getLiteral('<http://purl.org/dc/terms/description>')->getValue()
-                    ),
+                $class = new OntologyClass(
+                    $ontology,
+                    $classResource->getUri(),
+                    $classResource->getLiteral('<http://www.w3.org/2000/01/rdf-schema#label>')->getValue(),
+                    $classResource->getLiteral('<http://purl.org/dc/terms/description>')->getValue()
                 );
+
+                $ontology->addClass($class);
+
+                $parentClassUri = $classResource->getResource('<http://www.w3.org/2000/01/rdf-schema#subClassOf>')?->getUri();
+                $parentClass = $parentClassUri ? $ontology->class($parentClassUri) : null;
+
+                if (is_null($parentClass)) {
+                    continue;
+                }
+
+                $parentClass->addChildClass($class);
+                $class->setParentClass($parentClass);
             }
 
             foreach ($propertyResources as $propertyResource) {

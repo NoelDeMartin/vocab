@@ -78,9 +78,13 @@ class Ontology
         return null;
     }
 
-    public function route(string $name, ...$args): string
+    public function route($nameOrTerm = 'index', ...$args): string
     {
-        return route("ontologies.{$this->shortId}.".$name, ...$args);
+        if ($nameOrTerm instanceof OntologyTerm) {
+            return $this->route('show', $nameOrTerm->shortId);
+        }
+
+        return route("ontologies.{$this->shortId}.".$nameOrTerm, ...$args);
     }
 
     public function addClass(OntologyClass $class): void
