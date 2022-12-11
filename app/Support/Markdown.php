@@ -8,7 +8,7 @@ class Markdown extends Parsedown
 {
     public static function render($text, $line = false)
     {
-        $parser = new static;
+        $parser = new Markdown();
 
         return $line ? $parser->line($text) : $parser->text($text);
     }
