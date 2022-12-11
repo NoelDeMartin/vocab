@@ -37,4 +37,6 @@ else
     vocab-docker-compose run app php artisan view:cache
 fi
 
+vocab-cli chown
+
 echo "Updated successfully!"

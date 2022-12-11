@@ -2,7 +2,6 @@
 
 function vocab-docker-compose() {
     if vocab_is_using_nginx_agora; then
-        # echo "Run docker compose with $@"
         docker-compose -f $base_dir/docker-compose.nginx-agora.yml $@
     else
         docker-compose -f $base_dir/docker-compose.prod.yml $@
@@ -53,9 +52,6 @@ case "$command" in
         echo 'vocab shell {service?} | open shell in a running container'
         echo 'vocab docker-compose   | run docker-compose command'
         ;;
-    'stop' )
-        vocab-docker-compose down
-        ;;
     'restart' )
         vocab-cli stop
         vocab-cli start
@@ -63,7 +59,7 @@ case "$command" in
     'docker-compose' )
         vocab-docker-compose ${@:2}
         ;;
-    'install' | 'start' | 'update' | 'chown' | 'publish-assets' | 'shell' )
+    'install' | 'start' | 'stop' | 'update' | 'chown' | 'publish-assets' | 'shell' )
         $scripts_dir/$command.sh ${@:2}
         ;;
     * )
