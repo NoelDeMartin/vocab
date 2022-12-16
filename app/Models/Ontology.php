@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use EasyRdf\Graph;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
 
 class Ontology
 {
@@ -28,6 +30,11 @@ class Ontology
     public $description;
 
     /**
+     * @var Graph
+     */
+    public $graph;
+
+    /**
      * @var string[]
      */
     public $namespaces;
@@ -35,23 +42,20 @@ class Ontology
     /**
      * @var OntologyClass[]
      */
-    public $classes;
+    public $classes = [];
 
     /**
-     * @param  string  $id
-     * @param  string  $name
-     * @param  string  $description
+     * @param  string  $baseUri
+     * @param  Graph  $graph
      * @param  string[]  $namespaces
-     * @param  OntologyClass[]  $classes
      */
-    public function __construct(string $id, string $name, string $description, array $namespaces, array $classes = [])
+    public function __construct(string $baseUri, Graph $graph, array $namespaces)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->description = $description;
+        $this->id = $baseUri;
+        $this->name = $graph->getLiteral($baseUri, '<http://www.w3.org/2000/01/rdf-schema#label>')->getValue();
+        $this->description = $graph->getLiteral($baseUri, '<http://purl.org/dc/terms/description>')->getValue();
+        $this->graph = $graph;
         $this->namespaces = $namespaces;
-        $this->classes = $classes;
-
         $this->shortId = substr($this->id, strlen(config('ontologies.base_uri')), -1);
     }
 
@@ -88,11 +92,13 @@ class Ontology
         return route("ontologies.{$this->shortId}.".$nameOrTerm, ...$args);
     }
 
-    public function turtle(): string
+    public function rdfResponse(Request $request): Response
     {
-        $name = basename($this->id);
+        $serializedOntology = $this->graph->serialise($request->rdfFormat());
 
-        return File::get(resource_path("ontologies/$name.ttl"));
+        return response($serializedOntology, 200, [
+            'Content-Type' => $request->rdfContentType(),
+        ]);
     }
 
     public function addClass(OntologyClass $class): void

@@ -10,18 +10,16 @@ class OntologiesController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->header('Accept') === 'text/turtle') {
-            return response(Ontologies::current()->turtle(), 200, [
-                'Content-Type' => 'text/turtle',
-            ]);
-        }
-
         $ontology = Ontologies::current();
+
+        if ($request->wantsRDF()) {
+            return $ontology->rdfResponse($request);
+        }
 
         return view('ontologies.index', compact('ontology'));
     }
 
-    public function show(string $shortId)
+    public function show(Request $request, string $shortId)
     {
         $ontology = Ontologies::current();
         $term = Cache::remember(
@@ -31,7 +29,11 @@ class OntologiesController extends Controller
         );
 
         if (is_null($term)) {
-            abort(404);
+            return abort(404);
+        }
+
+        if ($request->wantsRDF()) {
+            return redirect($ontology->route(), 303);
         }
 
         return view('ontologies.show', compact('ontology', 'term'));

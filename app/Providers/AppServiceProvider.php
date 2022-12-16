@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\RequestRDF;
 use App\Services\OntologiesManager;
+use App\Support\Macros;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,5 +31,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('markdown', function ($expression) {
             return "<?php echo markdown_blade($expression); ?>";
         });
+
+        Macros::mixin(Request::class, RequestRDF::class);
     }
 }

@@ -61,12 +61,7 @@ class OntologiesManager
 
         $parser->parse($graph, $file->getContents(), 'turtle', $baseUri);
 
-        return tap(new Ontology(
-            $baseUri,
-            $graph->getLiteral($baseUri, '<http://www.w3.org/2000/01/rdf-schema#label>')->getValue(),
-            $graph->getLiteral($baseUri, '<http://purl.org/dc/terms/description>')->getValue(),
-            $parser->getNamespaces()
-        ), function ($ontology) use ($graph, $extraneousClasses) {
+        return tap(new Ontology($baseUri, $graph, $parser->getNamespaces()), function ($ontology) use ($graph, $extraneousClasses) {
             $classResources = $graph->allOfType('<http://www.w3.org/2000/01/rdf-schema#Class>');
             $propertyResources = $graph->allOfType('<http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>');
 
