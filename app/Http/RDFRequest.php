@@ -2,12 +2,13 @@
 
 namespace App\Http;
 
+use App\Support\Macros\MacroMixin;
 use EasyRdf\Format;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 
-class RequestRDF
+class RDFRequest extends MacroMixin
 {
     private const RDFS_FORMATS = ['turtle', 'rdfxml', 'jsonld', 'n3', 'ntriples', 'json', 'php'];
 
@@ -35,7 +36,7 @@ class RequestRDF
         }
 
         $formats = Cache::remember('ontologies.formats', config('ontologies.cache_ttl'), function () {
-            return array_reduce(RequestRDF::RDFS_FORMATS, function ($formats, $name) {
+            return array_reduce(RDFRequest::RDFS_FORMATS, function ($formats, $name) {
                 $format = Format::getFormat($name);
                 $mimeTypes = array_keys($format->getMimeTypes());
 
