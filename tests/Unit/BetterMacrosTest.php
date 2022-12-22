@@ -5,7 +5,7 @@ use App\Support\Macros\MacroMixin;
 use Illuminate\Support\Traits\Macroable;
 
 test('class based mixins', function () {
-    BetterMacros::mixin(TestMacroable::class, TestMixinClass::class);
+    BetterMacros::mixin(TestMacroable::class, TestMixin::class);
     $instance = new TestMacroable;
     $this->assertSame('instance-Adam', $instance->methodOne('Adam'));
 });
@@ -14,16 +14,16 @@ test("class based mixins don't replace", function () {
     TestMacroable::macro('methodThree', function () {
         return 'bar';
     });
-    BetterMacros::mixin(TestMacroable::class, TestMixinClass::class, false);
+    BetterMacros::mixin(TestMacroable::class, TestMixin::class, false);
     $instance = new TestMacroable;
     $this->assertSame('bar', $instance->methodThree());
 
-    BetterMacros::mixin(TestMacroable::class, TestMixinClass::class);
+    BetterMacros::mixin(TestMacroable::class, TestMixin::class);
     $this->assertSame('foo', $instance->methodThree());
 });
 
 test('class based mixins guard against non-macroables', function () {
-    BetterMacros::mixin(TestMixinClass::class, TestMacroable::class);
+    BetterMacros::mixin(TestMixin::class, TestMacroable::class);
 })
     ->throws(Exception::class, 'Macro mixins can only be applied to Macroable classes.');
 
@@ -39,7 +39,7 @@ class TestMacroable
     }
 }
 
-class TestMixinClass extends MacroMixin
+class TestMixin extends MacroMixin
 {
     public function methodOne($value)
     {
