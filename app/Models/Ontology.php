@@ -45,8 +45,6 @@ class Ontology
     public $classes = [];
 
     /**
-     * @param  string  $baseUri
-     * @param  Graph  $graph
      * @param  string[]  $namespaces
      */
     public function __construct(string $baseUri, Graph $graph, array $namespaces)

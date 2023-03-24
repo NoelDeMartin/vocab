@@ -15,10 +15,6 @@ class OntologyProperty extends OntologyTerm
     public $range;
 
     /**
-     * @param  Ontology  $ontology
-     * @param  string  $id
-     * @param  string  $name
-     * @param  string  $description
      * @param  OntologyClass[]  $domain
      * @param  OntologyClass[]  $range
      */

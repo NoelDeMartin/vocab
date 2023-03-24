@@ -31,9 +31,6 @@ class MacroMixin
 
     /**
      * Get target's property.
-     *
-     * @param  string  $name
-     * @return mixed
      */
     public function __get(string $name): mixed
     {
@@ -46,10 +43,6 @@ class MacroMixin
 
     /**
      * Set target's property.
-     *
-     * @param  string  $name
-     * @param  mixed  $value
-     * @return void
      */
     public function __set(string $name, mixed $value): void
     {
@@ -65,7 +58,6 @@ class MacroMixin
      *
      * @param  string  $name
      * @param  array  $arguments
-     * @return mixed
      */
     public function __call($name, $arguments): mixed
     {

@@ -20,10 +20,6 @@ class OntologyClass extends OntologyTerm
     public $childClasses = [];
 
     /**
-     * @param  Ontology  $ontology
-     * @param  string  $id
-     * @param  string  $name
-     * @param  string  $description
      * @param  OntologyProperty[]  $properties
      */
     public function __construct(

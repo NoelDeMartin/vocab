@@ -55,7 +55,6 @@ abstract class OntologyTerm
     }
 
     /**
-     * @param  string  $id
      * @param  string[]  $namespaces
      */
     protected function shortenId(string $id, array $namespaces): ?string

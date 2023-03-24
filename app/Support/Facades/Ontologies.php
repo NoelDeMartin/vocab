@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static Collection<TKey, Ontology> all();
- * @method static Ontology|null current(?string $name);
+ * @method static Ontology|null current(string|null $shortId=null);
  * @method static void routes();
  *
  * @see \App\Services\OntologiesManager

@@ -20,9 +20,6 @@ class BetterMacros
     /**
      * Apply class mixins.
      *
-     * @param  string  $baseClass
-     * @param  string  $mixinClass
-     * @param  bool  $replace
      * @return void
      *
      * @throws \ReflectionException
