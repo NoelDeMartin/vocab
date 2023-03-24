@@ -6,9 +6,6 @@ if [[ $(type -t vocab-cli) != function ]]; then
     exit;
 fi
 
-if vocab_is_using_nginx_agora; then
-    nginx-agora disable vocab
-    nginx-agora restart
-fi
-
+nginx-agora disable vocab
+nginx-agora restart
 vocab-docker-compose down

@@ -16,11 +16,7 @@ git -C $base_dir pull
 # TODO if nginx-agora is configured, regenerate and copy nginx config
 
 # Update containers
-if vocab_is_headless; then
-    vocab-docker-compose pull
-else
-    vocab-docker-compose build
-fi
+vocab-docker-compose pull
 
 if vocab_is_running; then
     vocab-cli restart

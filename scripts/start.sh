@@ -7,12 +7,6 @@ if [[ $(type -t vocab-cli) != function ]]; then
 fi
 
 vocab-docker-compose up -d
-
-if vocab_is_headless; then
-    vocab-cli publish-assets
-fi
-
-if vocab_is_using_nginx_agora; then
-    nginx-agora enable vocab
-    nginx-agora restart
-fi
+vocab-cli publish-assets
+nginx-agora enable vocab
+nginx-agora restart
