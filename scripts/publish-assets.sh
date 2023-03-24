@@ -6,12 +6,6 @@ if [[ $(type -t vocab-cli) != function ]]; then
     exit;
 fi
 
-if ! vocab_is_headless; then
-    echo "Assets should only be published in headless mode!"
-
-    exit
-fi
-
 if ! vocab_is_running; then
     echo "Can't publish assets if app is not running!"
 

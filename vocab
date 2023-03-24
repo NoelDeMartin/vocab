@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
 function vocab-docker-compose() {
-    if vocab_is_using_nginx_agora; then
-        docker-compose -f $base_dir/docker-compose.nginx-agora.yml $@
-    else
-        docker-compose -f $base_dir/docker-compose.prod.yml $@
-    fi
+    docker-compose -f $base_dir/docker-compose.yml $@
 }
 
 function vocab-cli() {
@@ -18,25 +14,11 @@ function vocab_is_running() {
     fi
 }
 
-function vocab_is_headless() {
-    if [ -d "$base_dir/app" ]; then
-        false
-    fi
-}
-
-function vocab_is_using_nginx_agora() {
-    if [ ! -d "$base_dir/nginx-agora" ]; then
-        false
-    fi
-}
-
 export base_dir=`cd $(readlink -f $0 | xargs dirname) && pwd`
 export scripts_dir="$base_dir/scripts"
 export -f vocab-docker-compose
 export -f vocab-cli
 export -f vocab_is_running
-export -f vocab_is_headless
-export -f vocab_is_using_nginx_agora
 
 command=$1
 

@@ -27,21 +27,6 @@ function ask_url() {
     do true; done
 }
 
-function ask_nginx_agora() {
-    while
-        echo "Do you want to use nginx-agora? (y/n)"
-        read USE_NGINX_AGORA
-
-        if [[ $USE_NGINX_AGORA != y && $USE_NGINX_AGORA != n ]]; then
-            echo "Please, respond with 'y' or 'n'."
-
-            continue
-        fi
-
-        break
-    do true; done
-}
-
 # Check if installing is necessary
 if [ -f "$base_dir/.env" ]; then
     echo "Already installed!"
@@ -71,7 +56,6 @@ function clean_up() {
 
 # Prepare .env
 ask_url
-ask_nginx_agora
 
 ESCAPED_APP_URL=$(printf '%s\n' "$APP_URL" | sed -e 's/[\/&]/\\&/g')
 
@@ -79,22 +63,20 @@ cp .env.prod.example .env
 sed s/APP_URL=/APP_URL=$ESCAPED_APP_URL/g -i .env
 
 # Prepare assets
-if [[ vocab_is_headless && ! -d "$base_dir/public" ]]; then
+if [[ ! -d "$base_dir/public" ]]; then
     mkdir "$base_dir/public"
 fi
 
 # Prepare nginx-agora
-if [[ $USE_NGINX_AGORA == y ]]; then
-    APP_DOMAIN=$(echo $APP_URL | sed -E s/https?:\\/\\///g)
+APP_DOMAIN=$(echo $APP_URL | sed -E s/https?:\\/\\///g)
 
-    mkdir "$base_dir/nginx-agora"
-    cp "$base_dir/nginx/site.conf.template" "$base_dir/nginx-agora/$APP_DOMAIN.conf"
-    sed "s/root \\/var\\/www\\/html/root \\/var\\/www\\/vocab/g" -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
-    sed "s/fastcgi_pass app:9000/fastcgi_pass vocab:9000/g" -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
-    sed s/\\[\\[APP_DOMAIN\\]\\]/$APP_DOMAIN/g -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
+mkdir "$base_dir/nginx-agora"
+cp "$base_dir/nginx/site.conf.template" "$base_dir/nginx-agora/$APP_DOMAIN.conf"
+sed "s/root \\/var\\/www\\/html/root \\/var\\/www\\/vocab/g" -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
+sed "s/fastcgi_pass app:9000/fastcgi_pass vocab:9000/g" -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
+sed s/\\[\\[APP_DOMAIN\\]\\]/$APP_DOMAIN/g -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
 
-    nginx-agora install "$base_dir/nginx-agora/$APP_DOMAIN.conf" "$base_dir/public" vocab
-fi
+nginx-agora install "$base_dir/nginx-agora/$APP_DOMAIN.conf" "$base_dir/public" vocab
 
 # Prepare storage
 vocab-cli chown
