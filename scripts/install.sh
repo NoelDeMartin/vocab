@@ -88,7 +88,7 @@ if [[ $USE_NGINX_AGORA == y ]]; then
     APP_DOMAIN=$(echo $APP_URL | sed -E s/https?:\\/\\///g)
 
     mkdir "$base_dir/nginx-agora"
-    cp "$base_dir/docker/nginx/site.conf.template" "$base_dir/nginx-agora/$APP_DOMAIN.conf"
+    cp "$base_dir/nginx/site.conf.template" "$base_dir/nginx-agora/$APP_DOMAIN.conf"
     sed "s/root \\/var\\/www\\/html/root \\/var\\/www\\/vocab/g" -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
     sed "s/fastcgi_pass app:9000/fastcgi_pass vocab:9000/g" -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
     sed s/\\[\\[APP_DOMAIN\\]\\]/$APP_DOMAIN/g -i "$base_dir/nginx-agora/$APP_DOMAIN.conf"
