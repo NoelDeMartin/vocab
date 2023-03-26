@@ -12,5 +12,5 @@ services:
 
 networks:
     default:
-        external:
-            name: nginx-agora
+        name: nginx-agora
+        external: true
