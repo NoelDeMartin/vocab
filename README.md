@@ -26,13 +26,16 @@ After running these commands, you should be able to use the app on [http://vocab
 
 ## Production
 
-For production, the repository is prepared to work in "headless mode". This means that the application code is published in [Docker Hub](https://hub.docker.com/r/noeldemartin/vocab), and you don't need to clone all the source to your server in order to run it. Instead, you'll only have the configuration files and the folders necessary to run the app using [Docker Compose](https://docs.docker.com/compose/). It is also prepared to work with [nginx-agora](https://github.com/noeldemartin/nginx-agora).
+For production, the repository is prepared to work in "headless mode". This means that the application code is published in [Docker Hub](https://hub.docker.com/r/noeldemartin/vocab), and you don't need to clone all the source to your server in order to run it. Instead, you only need the configuration files and the folders necessary to run the app using [Docker Compose](https://docs.docker.com/compose/). It is also prepared to work with [nginx-agora](https://github.com/noeldemartin/nginx-agora).
 
-You can set up the configuration files using the `./vocab` binary:
+You can configure your server with the following commands:
 
 ```sh
-git clone --branch headless --single-branch git@github.com:NoelDeMartin/vocab.git vocab
+sudo git clone --branch headless --single-branch https://github.com/NoelDeMartin/vocab.git vocab
+sudo chown $USER:$USER vocab -R
 cd vocab
+find storage -type d -exec chmod 777 {} +
+find storage -type f -exec chmod 666 {} +
 ./vocab install
 ./vocab start
 ```

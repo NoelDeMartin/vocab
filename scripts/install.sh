@@ -59,7 +59,7 @@ ask_url
 
 ESCAPED_APP_URL=$(printf '%s\n' "$APP_URL" | sed -e 's/[\/&]/\\&/g')
 
-cp .env.prod.example .env
+cp .env.example .env
 sed s/APP_URL=/APP_URL=$ESCAPED_APP_URL/g -i .env
 
 # Prepare assets
