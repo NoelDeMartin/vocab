@@ -4,7 +4,7 @@
 @section('content')
     <h1 class="mb-1 text-sky-900">{{ $ontology->name }}</h1>
     <code>{{ $ontology->id }}</code>
-    <p>{{ $ontology->description }}</p>
+    {!! Str::markdown($ontology->description) !!}
     <p>@lang('app.ontologies.index.classes')</p>
     <ul>
         @foreach ($ontology->classes as $class)
