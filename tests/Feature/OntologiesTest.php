@@ -17,7 +17,7 @@ test('show class', function () {
 
     $response->assertStatus(200);
     $response->assertSee('Property Operation');
-    $response->assertSee('Operation affecting a resource\'s property');
+    $response->assertSee('Operation affecting a resource\'s property', $escaped = false);
     $response->assertSee('property');
     $response->assertSee('rdf:Property');
     $response->assertSee('Property affected by the operation');

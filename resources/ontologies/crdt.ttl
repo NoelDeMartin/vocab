@@ -10,7 +10,7 @@
 <https://vocab.noeldemartin.com/crdt/>
     a owl:Ontology ;
     rdfs:label "Conflict-Free Replicated Datatypes (CRDT)"@en ;
-    dc:description "The Conflict-Free Replicated Datatypes (CRD-T) ontology can be used to describe changes made to resources over time.\nTo learn more about how to use it, check out the following presentation: <a href='https://www.youtube.com/watch?v=vYQmGeaQt8E' target='_blank'>Solid CRDTs in Practice</a>."@en ;
+    dc:description "The Conflict-Free Replicated Datatypes (CRDT) ontology can be used to describe changes made to resources over time.\nTo learn more about how to use it, check out the following presentation: <a href='https://www.youtube.com/watch?v=vYQmGeaQt8E' target='_blank'>Solid CRDTs in Practice</a>."@en ;
     rdfs:isDefinedBy : ;
     dc:issued "2022-05-26"^^xsd:date ;
     vann:preferredNamespacePrefix "crdt"@en ;
