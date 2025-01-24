@@ -31,7 +31,6 @@ This can be deployed using [kanjuro](https://github.com/NoelDeMartin/kanjuro) an
 ```sh
 git clone https://github.com/NoelDeMartin/vocab.git  --branch kanjuro --single-branch
 kanjuro install
-kanjuro permissions
 kanjuro start
 nginx-agora start
 ```
