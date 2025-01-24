@@ -5,7 +5,12 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: json, dom, curl, libxml, mbstring
+          coverage: none
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
