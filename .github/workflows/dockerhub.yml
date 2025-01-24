@@ -1,27 +1,34 @@
 name: DockerHub
-on: [push]
+on:
+  push:
+    branches:
+      - 'main'
+
 jobs:
-
-  # This publishes a development image, to tag an image to be used in production run the following
-  # commands in your machine:
-  # docker pull noeldemartin/vocab:{commit-id}
-  # docker tag noeldemartin/vocab:{commit-id} noeldemartin/vocab:latest
-  # docker push noeldemartin/vocab:latest
-
   publish-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - name: Set env
+        run: echo "GITHUB_REPOSITORY_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
       - name: Login
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-      - name: Install Node dependencies
-        run: npm ci --no-audit
-      - name: Generate assets
-        run: npm run build
+      - name: Prepare
+        run: mv kanjuro/Dockerfile ./
       - name: Build
-        run: docker build . --tag ${{ secrets.DOCKERHUB_USERNAME }}/vocab:$(git rev-parse HEAD)
-      - name: Push
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/vocab:$(git rev-parse HEAD)
+        run: |
+          npm ci --no-audit
+          npm run build
+          docker build . --tag ${{ secrets.DOCKERHUB_USERNAME }}/$GITHUB_REPOSITORY_NAME:$GITHUB_SHA
+      - name: Push commit tag
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/$GITHUB_REPOSITORY_NAME:$GITHUB_SHA
+      - name: Push latest tag
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/$GITHUB_REPOSITORY_NAME:$GITHUB_SHA ${{ secrets.DOCKERHUB_USERNAME }}/$GITHUB_REPOSITORY_NAME:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$GITHUB_REPOSITORY_NAME:latest
