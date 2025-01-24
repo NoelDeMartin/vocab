@@ -1,3 +1,3 @@
-# Noel De Martin's Vocabulary (headless)
+# Noel De Martin's Vocabulary (kanjuro)
 
-The code in this folder is intended to be used in headless mode, with the `headless` branch which is [generated automatically](https://github.com/NoelDeMartin/vocab/tree/main/.github/workflows/headless.yml). You can learn how to use it by reading the documentation in [the main branch](https://github.com/NoelDeMartin/vocab).
+The code in this folder is intended to be used for deployment with [kanjuro](https://github.com/NoelDeMartin/kanjuro). The `kanjuro` branch is [generated automatically](https://github.com/NoelDeMartin/vocab/tree/main/.github/workflows/kanjuro.yml). You can learn how to work with the project by reading the documentation in [the `main` branch](https://github.com/NoelDeMartin/vocab).
