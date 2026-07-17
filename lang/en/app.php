@@ -13,6 +13,7 @@ return [
     'ontologies' => [
         'index' => [
             'classes' => 'These are the classes included in this ontology:',
+            'orphanProperties' => 'These are the properties included in this ontology that are not associated with any class:',
         ],
         'show' => [
             'full' => 'View full ontology',
@@ -28,6 +29,7 @@ return [
             'children' => 'Classes that extend `:name`:',
         ],
         'property' => [
+            'range' => 'This property expects values of the following type:',
             'classes' => 'This property can be found in the following classes:',
         ],
     ],

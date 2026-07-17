@@ -41,8 +41,42 @@ test('show property', function () {
     $response->assertStatus(200);
     $response->assertSee('resource');
     $response->assertSee('Resource which the metadata makes reference to');
+    $response->assertSee('This property expects values of the following type:');
+    $response->assertSee('rdfs:Resource');
     $response->assertSee('Metadata');
     $response->assertSee('Operation');
+});
+
+test('show unionOf property', function () {
+    $response = $this->get('/crdt/value');
+
+    $response->assertStatus(200);
+    $response->assertSee('value');
+    $response->assertSee('Property value used by the operation');
+    $response->assertSee('Set Property Operation');
+    $response->assertSee('Add Property Operation');
+    $response->assertSee('Remove Property Operation');
+});
+
+test('show solid-extra ontology with orphan properties', function () {
+    $response = $this->get('/solid-extra/');
+
+    $response->assertStatus(200);
+    $response->assertSee('Solid Extended (solid-extra)');
+    $response->assertSee('This ontology defines some extensions to the Solid Protocol');
+    $response->assertSee('These are the properties included in this ontology that are not associated with any class:');
+    $response->assertSee('deepLastModified');
+    $response->assertDontSee('These are the classes included in this ontology:');
+});
+
+test('show orphan property with external domain', function () {
+    $response = $this->get('/solid-extra/deepLastModified');
+
+    $response->assertStatus(200);
+    $response->assertSee('deepLastModified');
+    $response->assertSee('Time at which a container or any of its nested documents were last modified.');
+    $response->assertSee('xsd:dateTime');
+    $response->assertSee('http://www.w3.org/ns/ldp#Container');
 });
 
 test('get property rdf', function () {

@@ -1,0 +1,26 @@
+@prefix : <https://vocab.noeldemartin.com/solid-extra/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix dcmi: <http://purl.org/dc/dcmitype/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ldp: <http://www.w3.org/ns/ldp#> .
+
+<https://vocab.noeldemartin.com/solid-extra/>
+    a owl:Ontology ;
+    rdfs:label "Solid Extended (solid-extra)"@en ;
+    dc:description "This ontology defines some extensions to the Solid Protocol that I've been using for performance optimizations when available."@en ;
+    dc:issued "2026-07-17"^^xsd:date ;
+    vann:preferredNamespacePrefix "solid-extra"@en ;
+    vann:preferredNamespaceUri "https://vocab.noeldemartin.com/solid-extra/"^^xsd:anyURI .
+
+:deepLastModified
+    a rdf:Property ;
+    rdfs:label "deepLastModified"@en ;
+    dc:description "Time at which a container or any of its nested documents were last modified."@en ;
+    rdfs:subPropertyOf dcmi:modified ;
+    rdfs:range xsd:dateTime ;
+    rdfs:domain ldp:Container ;
+    rdfs:isDefinedBy : .

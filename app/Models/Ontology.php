@@ -45,6 +45,11 @@ class Ontology
     public $classes = [];
 
     /**
+     * @var OntologyProperty[]
+     */
+    public $orphanProperties = [];
+
+    /**
      * @param  string[]  $namespaces
      */
     public function __construct(string $baseUri, Graph $graph, array $namespaces)
@@ -78,6 +83,14 @@ class Ontology
             return $property;
         }
 
+        foreach ($this->orphanProperties as $property) {
+            if ($property->id !== $id && $property->shortId !== $id) {
+                continue;
+            }
+
+            return $property;
+        }
+
         return null;
     }
 
@@ -102,5 +115,10 @@ class Ontology
     public function addClass(OntologyClass $class): void
     {
         $this->classes[] = $class;
+    }
+
+    public function addOrphanProperty(OntologyProperty $property): void
+    {
+        $this->orphanProperties[] = $property;
     }
 }

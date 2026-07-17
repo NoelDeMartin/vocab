@@ -87,6 +87,7 @@ class OntologiesManager
             }
 
             foreach ($propertyResources as $propertyResource) {
+                $linked = false;
                 $domainClasses = $propertyResource->all('<http://www.w3.org/2000/01/rdf-schema#domain>');
                 $rangeClasses = $propertyResource->all('<http://www.w3.org/2000/01/rdf-schema#range>');
                 $property = new OntologyProperty(
@@ -96,15 +97,33 @@ class OntologiesManager
                     $propertyResource->getLiteral('<http://purl.org/dc/terms/description>')->getValue()
                 );
 
-                foreach ($domainClasses as $domainClass) {
-                    $class = $ontology->class($domainClass->getUri());
+                foreach ($domainClasses as $domainClassValue) {
+                    $resolvedDomainClasses = [];
 
-                    if (is_null($class)) {
-                        continue;
+                    if ($domainClassValue->isBNode()) {
+                        $list = $domainClassValue->get('<http://www.w3.org/2002/07/owl#unionOf>');
+
+                        while ($list !== null && ($first = $list->get('<http://www.w3.org/1999/02/22-rdf-syntax-ns#first>')) !== null) {
+                            $resolvedDomainClasses[] = $first;
+                            $list = $list->get('<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest>');
+                        }
+                    } else {
+                        $resolvedDomainClasses[] = $domainClassValue;
                     }
 
-                    $class->addProperty($property);
-                    $property->addDomainClass($class);
+                    foreach ($resolvedDomainClasses as $domainClass) {
+                        $class = $ontology->class($domainClass->getUri());
+
+                        if (is_null($class)) {
+                            $property->addDomainClass($domainClass->getUri());
+
+                            continue;
+                        }
+
+                        $linked = true;
+                        $class->addProperty($property);
+                        $property->addDomainClass($class);
+                    }
                 }
 
                 foreach ($rangeClasses as $rangeClass) {
@@ -119,7 +138,12 @@ class OntologiesManager
                         continue;
                     }
 
+                    $linked = true;
                     $property->addRangeClass($class);
+                }
+
+                if (! $linked) {
+                    $ontology->addOrphanProperty($property);
                 }
             }
         });

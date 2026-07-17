@@ -5,4 +5,5 @@ test('show ontologies', function () {
 
     $response->assertStatus(200);
     $response->assertSee('Conflict-Free Replicated Datatypes (CRDT)');
+    $response->assertSee('Solid Extended (solid-extra)');
 });

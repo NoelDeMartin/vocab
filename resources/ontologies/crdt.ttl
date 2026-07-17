@@ -1,6 +1,7 @@
 @prefix : <https://vocab.noeldemartin.com/crdt/> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix dcmi: <http://purl.org/dc/dcmitype/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -11,10 +12,9 @@
     a owl:Ontology ;
     rdfs:label "Conflict-Free Replicated Datatypes (CRDT)"@en ;
     dc:description "The Conflict-Free Replicated Datatypes (CRDT) ontology can be used to describe changes made to resources over time.\nTo learn more about how to use it, check out the following presentation: <a href='https://www.youtube.com/watch?v=vYQmGeaQt8E' target='_blank'>Solid CRDTs in Practice</a>."@en ;
-    rdfs:isDefinedBy : ;
     dc:issued "2022-05-26"^^xsd:date ;
     vann:preferredNamespacePrefix "crdt"@en ;
-    vann:preferredNamespaceUri "http://www.w3.org/ns/solid/crdt#"^^xsd:anyURI .
+    vann:preferredNamespaceUri "https://vocab.noeldemartin.com/crdt/"^^xsd:anyURI .
 
 :Metadata
     a rdfs:Class ;
@@ -83,9 +83,9 @@
     a rdf:Property ;
     rdfs:label "resource"@en ;
     dc:description "Resource which the metadata makes reference to, or which is affected by the operation."@en ;
-    rdfs:subPropertyOf dcmi:subject ;
+    rdfs:subPropertyOf foaf:primaryTopic ;
     rdfs:range rdfs:Resource ;
-    rdfs:domain :Metadata, :Operation ;
+    rdfs:domain [ owl:unionOf ( :Metadata :Operation ) ] ;
     rdfs:isDefinedBy : .
 
 :createdAt
@@ -126,7 +126,7 @@
     a rdf:Property ;
     rdfs:label "value"@en ;
     dc:description "Property value used by the operation."@en ;
-    rdfs:domain :SetPropertyOperation, :AddPropertyOperation, :RemovePropertyOperation ;
+    rdfs:domain [ owl:unionOf ( :SetPropertyOperation :AddPropertyOperation :RemovePropertyOperation ) ] ;
     rdfs:isDefinedBy : .
 
 :date

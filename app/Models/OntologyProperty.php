@@ -5,7 +5,7 @@ namespace App\Models;
 class OntologyProperty extends OntologyTerm
 {
     /**
-     * @var OntologyClass[]
+     * @var array<OntologyClass|string>
      */
     public $domain;
 
@@ -15,7 +15,7 @@ class OntologyProperty extends OntologyTerm
     public $range;
 
     /**
-     * @param  OntologyClass[]  $domain
+     * @param  array<OntologyClass|string>  $domain
      * @param  OntologyClass[]  $range
      */
     public function __construct(
@@ -32,7 +32,7 @@ class OntologyProperty extends OntologyTerm
         $this->range = $range;
     }
 
-    public function addDomainClass(OntologyClass $class): void
+    public function addDomainClass(OntologyClass|string $class): void
     {
         $this->domain[] = $class;
     }
