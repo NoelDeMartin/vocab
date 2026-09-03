@@ -70,6 +70,9 @@ jobs:
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
           vp install
 
+      - name: Prepare The Environment
+        run: cp .env.example .env
+
       - name: Lint PHP
         run: composer lint:check
 

@@ -17,7 +17,7 @@ return [
 
     'default' => env('CACHE_STORE', env('CACHE_DRIVER', 'file')),
 
-    'serializable_classes' => false,
+    'serializable_classes' => true,
 
     /*
     |--------------------------------------------------------------------------
