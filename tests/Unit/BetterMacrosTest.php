@@ -4,25 +4,25 @@ use App\Support\Macros\BetterMacros;
 use App\Support\Macros\MacroMixin;
 use Illuminate\Support\Traits\Macroable;
 
-test('class based mixins', function () {
+it('supports class based mixins', function () {
     BetterMacros::mixin(TestMacroable::class, TestMixin::class);
     $instance = new TestMacroable;
-    $this->assertSame('instance-Adam', $instance->methodOne('Adam'));
+    expect($instance->methodOne('Adam'))->toBe('instance-Adam');
 });
 
-test("class based mixins don't replace", function () {
+it("doesn't replace existing macros in class based mixins", function () {
     TestMacroable::macro('methodThree', function () {
         return 'bar';
     });
     BetterMacros::mixin(TestMacroable::class, TestMixin::class, false);
     $instance = new TestMacroable;
-    $this->assertSame('bar', $instance->methodThree());
+    expect($instance->methodThree())->toBe('bar');
 
     BetterMacros::mixin(TestMacroable::class, TestMixin::class);
-    $this->assertSame('foo', $instance->methodThree());
+    expect($instance->methodThree())->toBe('foo');
 });
 
-test('class based mixins guard against non-macroables', function () {
+it('guards against non-macroables in class based mixins', function () {
     BetterMacros::mixin(TestMixin::class, TestMacroable::class);
 })
     ->throws(Exception::class, 'Macro mixins can only be applied to Macroable classes.');

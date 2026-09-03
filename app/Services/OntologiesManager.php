@@ -26,7 +26,11 @@ class OntologiesManager
      */
     public function all(): array
     {
-        return Cache::remember('ontologies.all', config('ontologies.cache_ttl'), function () {
+        /** @var int|null $cacheTtl */
+        $cacheTtl = config('ontologies.cache_ttl');
+
+        /** @var Ontology[] */
+        return Cache::remember('ontologies.all', $cacheTtl, function (): array {
             $files = File::allFiles(resource_path('ontologies'));
 
             return Arr::map($files, fn (SplFileInfo $file) => $this->parseOntology($file));
@@ -36,7 +40,7 @@ class OntologiesManager
     public function current(?string $shortId = null): ?Ontology
     {
         if ($shortId) {
-            $this->current = Arr::first(static::all(), fn ($ontology) => $ontology->shortId === $shortId);
+            $this->current = Arr::first($this->all(), fn ($ontology) => $ontology->shortId === $shortId);
         }
 
         return $this->current;
@@ -53,29 +57,43 @@ class OntologiesManager
 
     protected function parseOntology(SplFileInfo $file): Ontology
     {
-        $graph = new Graph();
-        $parser = new TurtleParser();
+        $graph = new Graph;
+        $parser = new TurtleParser;
+        /** @var array<string, OntologyClass> $extraneousClasses */
         $extraneousClasses = [];
         $name = $file->getFilenameWithoutExtension();
-        $baseUri = config('ontologies.base_uri').$name.'/';
+        /** @var string $baseUriPrefix */
+        $baseUriPrefix = config('ontologies.base_uri');
+        $baseUri = $baseUriPrefix.$name.'/';
 
         $parser->parse($graph, $file->getContents(), 'turtle', $baseUri);
 
-        return tap(new Ontology($baseUri, $graph, $parser->getNamespaces()), function ($ontology) use ($graph, $extraneousClasses) {
+        return tap(new Ontology($baseUri, $graph, $parser->getNamespaces()), function (Ontology $ontology) use ($graph, &$extraneousClasses) {
+            /** @var \EasyRdf\Resource[] $classResources */
             $classResources = $graph->allOfType('<http://www.w3.org/2000/01/rdf-schema#Class>');
+            /** @var \EasyRdf\Resource[] $propertyResources */
             $propertyResources = $graph->allOfType('<http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>');
 
             foreach ($classResources as $classResource) {
+                /** @var string $classUri */
+                $classUri = $classResource->getUri();
+                /** @var string $label */
+                $label = $classResource->getLiteral('<http://www.w3.org/2000/01/rdf-schema#label>')->getValue();
+                /** @var string $description */
+                $description = $classResource->getLiteral('<http://purl.org/dc/terms/description>')->getValue();
+
                 $class = new OntologyClass(
                     $ontology,
-                    $classResource->getUri(),
-                    $classResource->getLiteral('<http://www.w3.org/2000/01/rdf-schema#label>')->getValue(),
-                    $classResource->getLiteral('<http://purl.org/dc/terms/description>')->getValue()
+                    $classUri,
+                    $label,
+                    $description
                 );
 
                 $ontology->addClass($class);
 
-                $parentClassUri = $classResource->getResource('<http://www.w3.org/2000/01/rdf-schema#subClassOf>')?->getUri();
+                /** @var \EasyRdf\Resource|null $parentClassResource */
+                $parentClassResource = $classResource->getResource('<http://www.w3.org/2000/01/rdf-schema#subClassOf>');
+                $parentClassUri = $parentClassResource?->getUri();
                 $parentClass = $parentClassUri ? $ontology->class($parentClassUri) : null;
 
                 if (is_null($parentClass)) {
@@ -88,23 +106,36 @@ class OntologiesManager
 
             foreach ($propertyResources as $propertyResource) {
                 $linked = false;
+                /** @var \EasyRdf\Resource[] $domainClasses */
                 $domainClasses = $propertyResource->all('<http://www.w3.org/2000/01/rdf-schema#domain>');
+                /** @var \EasyRdf\Resource[] $rangeClasses */
                 $rangeClasses = $propertyResource->all('<http://www.w3.org/2000/01/rdf-schema#range>');
+                /** @var string $propertyUri */
+                $propertyUri = $propertyResource->getUri();
+                /** @var string $propertyLabel */
+                $propertyLabel = $propertyResource->getLiteral('<http://www.w3.org/2000/01/rdf-schema#label>')->getValue();
+                /** @var string $propertyDescription */
+                $propertyDescription = $propertyResource->getLiteral('<http://purl.org/dc/terms/description>')->getValue();
+
                 $property = new OntologyProperty(
                     $ontology,
-                    $propertyResource->getUri(),
-                    $propertyResource->getLiteral('<http://www.w3.org/2000/01/rdf-schema#label>')->getValue(),
-                    $propertyResource->getLiteral('<http://purl.org/dc/terms/description>')->getValue()
+                    $propertyUri,
+                    $propertyLabel,
+                    $propertyDescription
                 );
 
                 foreach ($domainClasses as $domainClassValue) {
+                    /** @var \EasyRdf\Resource[] $resolvedDomainClasses */
                     $resolvedDomainClasses = [];
 
                     if ($domainClassValue->isBNode()) {
+                        /** @var \EasyRdf\Resource|null $list */
                         $list = $domainClassValue->get('<http://www.w3.org/2002/07/owl#unionOf>');
 
                         while ($list !== null && ($first = $list->get('<http://www.w3.org/1999/02/22-rdf-syntax-ns#first>')) !== null) {
+                            /** @var \EasyRdf\Resource $first */
                             $resolvedDomainClasses[] = $first;
+                            /** @var \EasyRdf\Resource|null $list */
                             $list = $list->get('<http://www.w3.org/1999/02/22-rdf-syntax-ns#rest>');
                         }
                     } else {
@@ -112,10 +143,12 @@ class OntologiesManager
                     }
 
                     foreach ($resolvedDomainClasses as $domainClass) {
-                        $class = $ontology->class($domainClass->getUri());
+                        /** @var string $domainClassUri */
+                        $domainClassUri = $domainClass->getUri();
+                        $class = $ontology->class($domainClassUri);
 
                         if (is_null($class)) {
-                            $property->addDomainClass($domainClass->getUri());
+                            $property->addDomainClass($domainClassUri);
 
                             continue;
                         }
@@ -127,6 +160,7 @@ class OntologiesManager
                 }
 
                 foreach ($rangeClasses as $rangeClass) {
+                    /** @var string $classUri */
                     $classUri = $rangeClass->getUri();
                     $class = $ontology->class($classUri);
 

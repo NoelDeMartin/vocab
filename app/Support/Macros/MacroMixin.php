@@ -9,21 +9,18 @@ class MacroMixin
     /**
      * The target instance.
      *
-     * @var mixed
+     * @var object
      */
     protected $target;
 
     /**
      * The reflected instance.
      *
-     * @var ReflectionClass
+     * @var ReflectionClass<object>
      */
     protected $reflected;
 
-    /**
-     * @param  mixed  $target
-     */
-    public function __construct($target)
+    public function __construct(object $target)
     {
         $this->target = $target;
         $this->reflected = new ReflectionClass($target);
@@ -36,8 +33,6 @@ class MacroMixin
     {
         $property = $this->reflected->getProperty($name);
 
-        $property->setAccessible(true);
-
         return $property->getValue($this->target);
     }
 
@@ -48,22 +43,17 @@ class MacroMixin
     {
         $property = $this->reflected->getProperty($name);
 
-        $property->setAccessible(true);
-
         $property->setValue($this->target, $value);
     }
 
     /**
      * Call target's method.
      *
-     * @param  string  $name
-     * @param  array  $arguments
+     * @param  array<mixed>  $arguments
      */
-    public function __call($name, $arguments): mixed
+    public function __call(string $name, array $arguments): mixed
     {
         $method = $this->reflected->getMethod($name);
-
-        $method->setAccessible(true);
 
         return $method->invoke($this->target, ...$arguments);
     }

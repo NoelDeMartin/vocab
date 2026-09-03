@@ -8,21 +8,16 @@ If you want to create your own vocabs, you're also welcome to clone this reposit
 
 ## Development
 
-For development, you can clone the repository and serve it using [Laravel Sail](https://laravel.com/docs/sail). Make sure to also compile assets with `npm` and add the domain to `/etc/hosts`.
+For development, you can clone the repository and use `composer setup` to get started:
 
 ```sh
 git clone git@github.com:NoelDeMartin/vocab.git vocab
 cd vocab
-cp .env.example .env
-docker run --rm -u '$(id -u):$(id -g)' -v '$(pwd):/var/www/html' -w /var/www/html laravelsail/php82-composer:latest composer install --ignore-platform-reqs
-./vendor/bin/sail up -d
-./vendor/bin/sail artisan key:generate
-sudo -- sh -c -e "echo '127.0.0.1 vocab.test' >> /etc/hosts"
-npm install
-npm run build
+composer setup
+composer dev
 ```
 
-After running these commands, you should be able to use the app on [http://vocab.test](http://vocab.test).
+After running these commands, you should be able to use the app on [http://localhost:8000](http://localhost:8000).
 
 ## Production
 

@@ -7,10 +7,13 @@ use EasyRdf\Parser\Turtle;
 class TurtleParser extends Turtle
 {
     /**
-     * @return string[]
+     * @return array<string, string>
      */
     public function getNamespaces(): array
     {
-        return $this->namespaces;
+        /** @var array<string, string> $namespaces */
+        $namespaces = (array) $this->namespaces;
+
+        return $namespaces;
     }
 }

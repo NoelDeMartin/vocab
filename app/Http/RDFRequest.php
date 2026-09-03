@@ -35,8 +35,15 @@ class RDFRequest extends MacroMixin
             return null;
         }
 
-        $formats = Cache::remember('ontologies.formats', config('ontologies.cache_ttl'), function () {
-            return array_reduce(RDFRequest::RDFS_FORMATS, function ($formats, $name) {
+        /** @var int|null $cacheTtl */
+        $cacheTtl = config('ontologies.cache_ttl');
+
+        /** @var array<string, string> $formats */
+        $formats = Cache::remember('ontologies.formats', $cacheTtl, function () {
+            /** @var array<string, string> $initial */
+            $initial = [];
+
+            return array_reduce(RDFRequest::RDFS_FORMATS, function (array $formats, string $name) {
                 $format = Format::getFormat($name);
                 $mimeTypes = array_keys($format->getMimeTypes());
 
@@ -45,7 +52,7 @@ class RDFRequest extends MacroMixin
                 }
 
                 return $formats;
-            }, []);
+            }, $initial);
         });
 
         foreach ($contentTypes as $contentType) {

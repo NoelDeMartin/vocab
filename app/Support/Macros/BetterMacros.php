@@ -13,30 +13,31 @@ class BetterMacros
     /**
      * Mixin instances.
      *
-     * @var WeakMap|null
+     * @var WeakMap<object, object>|null
      */
     protected static $mixins;
 
     /**
      * Apply class mixins.
      *
-     * @return void
+     * @param  class-string  $baseClass
+     * @param  class-string  $mixinClass
      *
      * @throws \ReflectionException
      */
-    public static function mixin(string $baseClass, string $mixinClass, bool $replace = true)
+    public static function mixin(string $baseClass, string $mixinClass, bool $replace = true): void
     {
         if (! in_array(Macroable::class, class_uses_recursive($baseClass))) {
             throw new Exception('Macro mixins can only be applied to Macroable classes.');
         }
 
-        $instances = static::$mixins ??= new WeakMap();
+        $instances = static::$mixins ??= new WeakMap;
         $methods = (new ReflectionClass($mixinClass))->getMethods(
             ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
         );
 
         foreach ($methods as $method) {
-            if ($method->name === '__constructor' || (! $replace && $baseClass::hasMacro($method->name))) {
+            if ($method->name === '__construct' || (! $replace && $baseClass::hasMacro($method->name))) {
                 continue;
             }
 
@@ -44,6 +45,7 @@ class BetterMacros
                 // @phpstan-ignore-next-line
                 $instance = $instances[$this] ??= new $mixinClass($this);
 
+                /** @var object $instance */
                 return $method->invoke($instance, ...$args);
             });
         }

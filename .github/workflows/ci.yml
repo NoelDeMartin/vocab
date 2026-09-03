@@ -1,32 +1,80 @@
 name: CI
-on: [push]
-jobs:
 
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+jobs:
   tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['8.3', '8.4', '8.5']
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: shivammathur/setup-php@v2
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
-          extensions: json, dom, curl, libxml, mbstring
+          php-version: ${{ matrix.php-version }}
+          tools: composer:v2
           coverage: none
-      - uses: actions/setup-node@v3
+
+      - name: Setup Node
+        uses: voidzero-dev/setup-vp@v1.18.0
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: '.node-version'
+          cache: true
+
+      - name: Install Node Dependencies
+        run: vp install
+
+      - name: Install Composer Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
       - name: Prepare The Environment
         run: cp .env.example .env
-      - name: Install Composer Dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
-      - name: Install npm packages
-        run: npm ci --no-audit
+
       - name: Generate Application Key
         run: php artisan key:generate
-      - name: Generate assets
-        run: npm run build
-      - name: Run Linting
-        run: ./vendor/bin/pint --test
-      - name: Run Static Analysis
-        run: ./vendor/bin/phpstan analyse
+
+      - name: Build Assets
+        run: vp run build
+
       - name: Run Tests
-        run: php artisan test
+        run: ./vendor/bin/pest
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+
+      - uses: voidzero-dev/setup-vp@v1.18.0
+        with:
+          node-version-file: '.node-version'
+          cache: true
+
+      - name: Install Dependencies
+        run: |
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          vp install
+
+      - name: Lint PHP
+        run: composer lint:check
+
+      - name: Type check PHP
+        run: composer types:check
+
+      - name: Lint Frontend
+        run: vp check

@@ -49,13 +49,16 @@ abstract class OntologyTerm
         $this->name = $name;
         $this->description = $description;
 
+        /** @var array<string, string> $easyRdfNamespaces */
+        $easyRdfNamespaces = RdfNamespace::namespaces();
+
         $this->shortId = $this->shortenId($id, $ontology->namespaces)
-            ?? $this->shortenId($id, RdfNamespace::namespaces())
+            ?? $this->shortenId($id, $easyRdfNamespaces)
             ?? $id;
     }
 
     /**
-     * @param  string[]  $namespaces
+     * @param  array<string, string>  $namespaces
      */
     protected function shortenId(string $id, array $namespaces): ?string
     {

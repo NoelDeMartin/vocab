@@ -1,9 +1,9 @@
 <?php
 
-test('show ontologies', function () {
+it('shows ontologies', function () {
     $response = $this->get('/');
 
-    $response->assertStatus(200);
+    $response->assertOk();
     $response->assertSee('Conflict-Free Replicated Datatypes (CRDT)');
     $response->assertSee('Solid Extended (solid-extra)');
 });

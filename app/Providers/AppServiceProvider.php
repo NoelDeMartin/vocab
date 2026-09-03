@@ -13,24 +13,20 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton('ontologies', OntologiesManager::class);
     }
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         BetterMacros::mixin(Request::class, RDFRequest::class);
-        Blade::directive('markdown', function ($expression) {
-            return "<?php echo markdown_blade($expression); ?>";
+        Blade::directive('markdown', function (?string $expression): string {
+            return "<?php echo markdown_blade({$expression}); ?>";
         });
     }
 }

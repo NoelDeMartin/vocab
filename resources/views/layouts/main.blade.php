@@ -9,8 +9,8 @@
         @vite('resources/css/app.css')
     </head>
     <body class="text-base font-normal leading-tight text-gray-900 antialiased">
-        <div class="flex flex-col m-auto pt-edge px-edge w-full max-w-screen-lg min-h-screen">
-            <main class="prose flex-grow max-w-screen-lg">
+        <div class="flex flex-col m-auto pt-edge px-edge w-full max-w-(--breakpoint-lg) min-h-screen">
+            <main class="prose grow max-w-(--breakpoint-lg)">
                 @yield('content')
             </main>
             <footer class="py-2 flex justify-start space-x-2">

@@ -8,10 +8,11 @@ jobs:
   publish-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: voidzero-dev/setup-vp@v1.18.0
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: '.node-version'
+          cache: true
       - name: Set env
         run: echo "GITHUB_REPOSITORY_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
       - name: Login
@@ -23,8 +24,8 @@ jobs:
         run: mv kanjuro/Dockerfile ./
       - name: Build
         run: |
-          npm ci --no-audit
-          npm run build
+          vp install
+          vp run build
           docker build . --tag ${{ secrets.DOCKERHUB_USERNAME }}/$GITHUB_REPOSITORY_NAME:$GITHUB_SHA
       - name: Push commit tag
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/$GITHUB_REPOSITORY_NAME:$GITHUB_SHA

@@ -35,7 +35,7 @@ class Ontology
     public $graph;
 
     /**
-     * @var string[]
+     * @var array<string, string>
      */
     public $namespaces;
 
@@ -50,7 +50,7 @@ class Ontology
     public $orphanProperties = [];
 
     /**
-     * @param  string[]  $namespaces
+     * @param  array<string, string>  $namespaces
      */
     public function __construct(string $baseUri, Graph $graph, array $namespaces)
     {
@@ -59,7 +59,9 @@ class Ontology
         $this->description = $graph->getLiteral($baseUri, '<http://purl.org/dc/terms/description>')->getValue();
         $this->graph = $graph;
         $this->namespaces = $namespaces;
-        $this->shortId = substr($this->id, strlen(config('ontologies.base_uri')), -1);
+        /** @var string $baseUriPrefix */
+        $baseUriPrefix = config('ontologies.base_uri');
+        $this->shortId = substr($this->id, strlen($baseUriPrefix), -1);
     }
 
     public function class(string $id): ?OntologyClass
@@ -94,7 +96,7 @@ class Ontology
         return null;
     }
 
-    public function route($nameOrTerm = 'index', ...$args): string
+    public function route(OntologyTerm|string $nameOrTerm = 'index', mixed ...$args): string
     {
         if ($nameOrTerm instanceof OntologyTerm) {
             return $this->route('show', $nameOrTerm->shortId);
@@ -105,6 +107,7 @@ class Ontology
 
     public function rdfResponse(Request $request): Response
     {
+        /** @var string $serializedOntology */
         $serializedOntology = $this->graph->serialise($request->rdfFormat());
 
         return response($serializedOntology, 200, [

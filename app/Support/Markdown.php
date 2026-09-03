@@ -6,24 +6,42 @@ use Parsedown;
 
 class Markdown extends Parsedown
 {
-    public static function render($text, $line = false)
+    public static function render(string $text, bool $line = false): string
     {
-        $parser = new Markdown();
+        $parser = new Markdown;
 
-        return $line ? $parser->line($text) : $parser->text($text);
+        /** @var string $rendered */
+        $rendered = $line ? $parser->line($text) : $parser->text($text);
+
+        return $rendered;
     }
 
-    protected function inlineLink($excerpt)
+    /**
+     * @param  array<string, mixed>  $excerpt
+     * @return array<string, mixed>|null
+     */
+    protected function inlineLink($excerpt): ?array
     {
+        /** @var array<string, mixed>|null $result */
         $result = parent::inlineLink($excerpt);
 
-        $result['element']['attributes'] = $result['element']['attributes'] ?? [];
+        if (is_null($result) || ! is_array($result['element'] ?? null)) {
+            return $result;
+        }
 
-        $url = $result['element']['attributes']['href'] ?? '';
+        /** @var array<string, mixed> $element */
+        $element = $result['element'];
+        /** @var array<string, mixed> $attributes */
+        $attributes = is_array($element['attributes'] ?? null) ? $element['attributes'] : [];
+
+        $url = is_string($attributes['href'] ?? null) ? $attributes['href'] : '';
 
         if (! str_starts_with($url, '#') && ! str_starts_with($url, url(''))) {
-            $result['element']['attributes']['target'] = '_blank';
+            $attributes['target'] = '_blank';
         }
+
+        $element['attributes'] = $attributes;
+        $result['element'] = $element;
 
         return $result;
     }

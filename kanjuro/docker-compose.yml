@@ -1,16 +1,16 @@
 services:
-    app:
-        image: noeldemartin/vocab
-        volumes:
-            - ./storage:/app/storage
-            - ./.env:/app/.env
-        restart: unless-stopped
-        networks:
-            default:
-                aliases:
-                    - vocab
+  app:
+    image: noeldemartin/vocab
+    volumes:
+      - ./storage:/app/storage
+      - ./.env:/app/.env
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - vocab
 
 networks:
-    default:
-        name: nginx-agora
-        external: true
+  default:
+    name: nginx-agora
+    external: true

@@ -3,15 +3,15 @@
 namespace App\Support\Facades;
 
 use App\Models\Ontology;
-use Illuminate\Support\Collection;
+use App\Services\OntologiesManager;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static Collection<TKey, Ontology> all();
- * @method static Ontology|null current(string|null $shortId=null);
- * @method static void routes();
+ * @method static Ontology[] all()
+ * @method static Ontology|null current(string|null $shortId=null)
+ * @method static void routes()
  *
- * @see \App\Services\OntologiesManager
+ * @see OntologiesManager
  */
 class Ontologies extends Facade
 {
