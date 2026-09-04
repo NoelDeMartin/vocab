@@ -71,7 +71,9 @@ jobs:
           vp install
 
       - name: Prepare The Environment
-        run: cp .env.example .env
+        run: |
+          cp .env.example .env
+          php artisan key:generate
 
       - name: Lint PHP
         run: composer lint:check
