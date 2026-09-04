@@ -1,5 +1,21 @@
 <?php
 
+use App\Models\Ontology;
+use App\Models\OntologyClass;
+use App\Models\OntologyProperty;
+use EasyRdf\Collection;
+use EasyRdf\Container;
+use EasyRdf\Graph;
+use EasyRdf\Literal;
+use EasyRdf\Literal\Boolean;
+use EasyRdf\Literal\Date;
+use EasyRdf\Literal\DateTime;
+use EasyRdf\Literal\Decimal;
+use EasyRdf\Literal\HexBinary;
+use EasyRdf\Literal\HTML;
+use EasyRdf\Literal\Integer;
+use EasyRdf\Literal\XML;
+use EasyRdf\ParsedUri;
 use Illuminate\Support\Str;
 
 return [
@@ -16,8 +32,6 @@ return [
     */
 
     'default' => env('CACHE_STORE', env('CACHE_DRIVER', 'file')),
-
-    'serializable_classes' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -109,4 +123,34 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Serializable Classes
+    |--------------------------------------------------------------------------
+    |
+    | When set to false, cache stores will not unserialize arbitrary PHP objects,
+    | protecting your application from deserialization vulnerabilities. You may
+    | provide an array of specific classes that should be allowed.
+    |
+    */
+
+    'serializable_classes' => [
+        Ontology::class,
+        OntologyClass::class,
+        OntologyProperty::class,
+        Collection::class,
+        Container::class,
+        Graph::class,
+        Literal::class,
+        Boolean::class,
+        Date::class,
+        DateTime::class,
+        Decimal::class,
+        HTML::class,
+        HexBinary::class,
+        Integer::class,
+        XML::class,
+        ParsedUri::class,
+        EasyRdf\Resource::class,
+    ],
 ];
