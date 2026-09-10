@@ -1,6 +1,8 @@
 services:
   app:
     image: noeldemartin/vocab
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - ./storage:/app/storage
       - ./.env:/app/.env
